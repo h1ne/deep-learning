@@ -9,17 +9,31 @@ import matplotlib.pyplot as plt
 class MyNet(nn.Module):
     def __init__(self):
         super(MyNet,self).__init__()
+	# 2次元畳み込み層
+	# Conv2d(N, C, H, W)
+	# N is a batch size, C denotes a number of channels, H is a height of input planes in pixels, and W is width in pixels.
+	##  batch size : 一度に処理されるデータの数
         self.conv1 = nn.Conv2d(1,32,3,1)
         self.conv2 = nn.Conv2d(32,64,3,1)
+	# 畳み込み層の出力から最大値を抽出する関数
+	# ストライドが2の最大プーリング層
+	# MaxPool2d(kH, kW)
+	# kH : カーネルサイズ
+	# kW : ストライド
+	## ストライド : 畳み込み処理におけるフィルタが移動する幅
         self.pool = nn.MaxPool2d(2,2)
+	# ドロップアウト処理
+	## ドロップアウト層：過学習を防ぐ
+	# 引数：ドロップアウト率
         self.dropout1 = nn.Dropout2d(0.25)
         self.dropout2 = nn.Dropout2d(0.5)
+	# 128ユニットの入力を受け取り、最終的な出力クラス数である10ユニットの出力を生成
         self.fc1 = nn.Linear(12*12*64,128)
         self.fc2 = nn.Linear(128,10)
 
     def forward(self,x):
-        x = self.conv1(x)
-        x = f.relu(x)
+        x = self.conv1(x) # 畳み込み層の適用
+        x = f.relu(x) # ReLU関数
         x = self.conv2(x)
         x = f.relu(x)
         x = self.pool(x)
@@ -153,4 +167,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
